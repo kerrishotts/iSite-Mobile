@@ -1,0 +1,16 @@
+body.portrait.iphone
+{
+    width:320px;
+}
+
+body.portrait.iphone #bodyPanel
+{
+    left:0px;
+    right: 0;
+}
+
+body.portrait.iphone #menuPanel
+{
+    display: none;
+}
+
