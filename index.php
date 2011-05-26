@@ -40,7 +40,7 @@
             <div class="navBar" id="navBodyArea">
                 <a id="btnBack" href="javascript:loadContent (returnTo.pop(), updateMainMenu, 'slideBack')" class="button back black"><span></span>Back</a>
                 <a id="btnMenu" href="javascript:toggleMenu ()" class="button black">Menu</a>
-                <span id="navSiteTitle">Sample Church of the Nazarene</span><span id="navSiteBullet"> &bull; </span><span id="navBodyTitle">Home</span>
+                <span id="navSiteTitle">Site Title</span><span id="navSiteBullet"> &bull; </span><span id="navBodyTitle">Home</span>
             </div>
             <div class="container"  id="pnlBodyArea">
                 <!-- this to be replaced by content at startup -->
@@ -55,8 +55,8 @@
         <script>
         
             // startup variables
-            var mySiteName = "Sample Church of the Nazarene";
-            var myMenuName = "My Mobile Church";
+            var mySiteName = "iSite Mobile Demo";
+            var myMenuName = "iSite Mobile";
             var myStartPage = "./home.php";
             var myStartName = "Home";
         
