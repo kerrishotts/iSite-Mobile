@@ -398,6 +398,16 @@ function setPageTitle ( title )
     $("navBodyTitle").innerHTML = title ? title : "Home";
 }
 
+function setSiteTitle ( title )
+{
+    $("navSiteTitle").innerHTML = title ? title : "My Site";
+}
+
+function setMenuTitle ( title )
+{
+    $("navMenuTitle").innerHTML = title ? title : "Menu";
+}
+
 
 /*
  * loaded()
@@ -409,6 +419,16 @@ function loaded() {
     //First things first, update our orientation (we can't assume the
     //user is in any particular orientation when loading)
     updateOrientation();
+    
+    // update certain interface settings
+    setMenuTitle ( myMenuName );
+    setSiteTitle ( mySiteName );
+    setPageTitle ( myStartName );
+    
+    // and load our first page
+    loadContent ( myStartPage, updateMainMenu);
+    
+    // force an update at the end to fix any display kinks.
     $("bodyPanel").style.display="block";
 }
             
