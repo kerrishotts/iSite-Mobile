@@ -1,8 +1,8 @@
 <?php
-    $facebookName = "Godfrey-Church-of-the-Nazarene";
-    $facebookUserID = "240005723096";
+    $facebookName = "photoKandy-Studios";
+    $facebookUserID = "87979941601";
     $facebookItemCount = 25;
-    $facebookAvatar = 'https://si2.twimg.com/profile_images/276912045/crosslogo100_reasonably_small.jpg';
+    $facebookAvatar = 'http://profile.ak.fbcdn.net/hprofile-ak-snc4/41475_1362462100_2106_q.jpg';
 ?>
 
 <div class="content">
