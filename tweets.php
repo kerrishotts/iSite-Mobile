@@ -1,8 +1,8 @@
 <?php
-    $twitterName = "godfreynaz";
-    $twitterUserID = "49681358";
+    $twitterName = "photokandy";
+    $twitterUserID = "16098212";
     $twitterItemCount = 25;
-    $twitterAvatar = 'https://si2.twimg.com/profile_images/276912045/crosslogo100_reasonably_small.jpg';
+    $twitterAvatar = 'https://si1.twimg.com/profile_images/1092570194/social-logo-v2_reasonably_small.png';
 ?>
 
 <div class="content">
