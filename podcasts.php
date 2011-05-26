@@ -1,18 +1,16 @@
 <?php
     error_reporting( 0 );
-    $itunesFeed = "http://godfreynaz.blip.tv/rss/itunes/";
-    $itunesPage = "http://itunes.apple.com/us/podcast/godfrey-church-nazarene/id412558543";
+    $itunesFeed = "http://feeds.twit.tv/twirt_video_small";
+    $itunesPage = "http://itunes.apple.com/podcast/this-week-in-radio-tech-video/id435030225";
     $itunesItemCount = 25;
-    $itunesCover = 'http://a.images.blip.tv/Godfreynaz-300x300_show_image746.jpg';
+    $itunesCover = 'http://a3.mzstatic.com/us/r30/Podcasts/4d/df/1d/dj.fkhlbrem.170x170-75.jpg';
 ?>
 
 <div class="content">
 
  <img class="imgLeft" src='<?= $itunesCover ?>' width=200px />
  <h1>Available Podcasts</h1>
- <p>Welcome to Godfrey Church of the Nazarene! We hope you enjoy these video clips of our services and other events.
- You're welcome to stop by in person as well. Please Note: Due to licensing and copyright restrictions,
- some material is not available online.</p>
+ <p>The following shows an example iTunes feed showing the most recent episodes for a podcast. Note: not working for all feeds yet.</p>
  <div class="listGroup">
 <?php
     include ('./script/itunes.php');
