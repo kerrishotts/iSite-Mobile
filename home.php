@@ -16,7 +16,7 @@
 
     <div class="listGroup">
         <a class="listItem arrow" href="javascript:loadContent('./tweets.php', updateMainMenu,'slideOut', './home.php');">Latest Tweets <span class="ipad minor floatRight">Chirp, Chirp!</span></a>
-        <a class="listItem arrow" href="javascript:loadContent('./facebook.php', updateMainMenu,'slideOut' , './home.php');">Facebook Page <span class="ipad minor floatRight">Want to be our friend?</span></a>
+        <a class="listItem arrow" href="javascript:loadContent('./gplus.php', updateMainMenu,'slideOut' , './home.php');">Google+ <span class="ipad minor floatRight">Want to be our friend?</span></a>
         <a class="listItem arrow" href="javascript:loadContent('./contact.php', updateMainMenu,'slideOut', './home.php' );">Contact Us <span class="ipad minor floatRight">E-mail and more</span></a>
     </div>
     <br>

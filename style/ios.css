@@ -47,6 +47,12 @@ body
     float: left;
     margin-left: 12px;
 }
+.navBar #navTitleArea
+{
+    position: absolute;
+    left: 160;
+    right: 160;
+}
 
 .container
 {
@@ -197,10 +203,10 @@ body
 .listItem img
 {
     border: none;
-    width: 128px;
     margin-left: -12px;
     margin-top: -12px;
     margin-right: 12px;
+    margin-bottom: -12px;
     border-right:1px solid #000;
     float: left;
     display: inline-block;
@@ -217,7 +223,16 @@ body
 {
     border-bottom-left-radius: 10px;
 }
-
+.listGroup h2:first-child
+{
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+.listGroup h2:last-child
+{
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
 .navSubItem
 {
     color: #333;

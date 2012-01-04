@@ -17,8 +17,11 @@
  */
 
 // variables
-var sbMainArea; // scroller for the main menu area
-var sbBodyArea; // scroller for the body area
+var sbMenu = 0;
+var sbBody = 1;
+var sb = Array(); // scrollers for the various areas.
+var sbAreas = Array("pnlMainArea","pnlBodyArea");
+
 var returnTo = Array(); // stack for back-button history
 
 // common functions
@@ -33,6 +36,57 @@ function $(id)
     return document.getElementById(id);
 }
 
+function _resetSB ( o )
+{
+    var refreshed = false;
+    console.log ( 'Really Resetting ' + o  );
+    
+    if (sb[o])
+    {
+        try
+        {
+            sb[o].refresh();
+            refreshed = true;
+        }
+        catch (e)
+        {
+            refreshed = false;
+            sb[o].destroy();
+        }
+        finally
+        {
+            if (!refreshed)
+            {
+                sb[o] = new iScroll ( sbAreas[o] );                
+            }
+        }
+    }
+    else
+    {
+        sb[o] = new iScroll ( sbAreas[o] );
+    }
+}
+
+function resetSB ( o, dly )
+{
+    console.log ( 'Resetting ' + o + ' in ' + (dly ? dly : 125) );
+    setTimeout ( function () { _resetSB (o); }, (dly ? dly : 125) );
+}
+
+function destroySB ( o )
+{
+    try {
+        sb[o].destroy();
+    }
+    catch (e)
+    {
+        ;
+    }
+    finally
+    {
+        sb[o] = null;
+    }
+}
 
 /*
  * isIPad(), isIPhone
@@ -132,9 +186,8 @@ function updateOrientation()
 
     // and reset our scrollers.
         setTimeout(function () {
-            sbMainArea = new iScroll('pnlMainArea');
-            sbBodyArea = new iScroll('pnlBodyArea');
-            // sbBodyArea.scrollTo(0,1,10);
+            resetSB ( sbMenu );
+            resetSB ( sbBody );
         }, 100);
     return true;
 }
@@ -285,6 +338,8 @@ function loadContent(url, callback, animate, backTo) {
         
                 // fill content
                 setTimeout ( function () {
+                    // nuke our scrollbar
+                    destroySB ( sbBody );
                     // set the content
                     document.getElementById('pnlBodyArea').innerHTML = page_request.responseText;
                     // process scripts
@@ -300,25 +355,7 @@ function loadContent(url, callback, animate, backTo) {
                         $("btnBack").style.display="none";
                     }
                     
-                    // try to reset our scrollers
-                    if (sbBodyArea)
-                    {
-                        try
-                        {
-                            sbBodyArea.destroy();
-                        }
-                        catch (e)
-                        {
-                            // do nothing;
-                        }
-                        finally
-                        {
-                            sbBodyArea = null;
-                        }
-                    }
-                    sbBodyArea = new iScroll( "pnlBodyArea" );
-                    
-                    
+                    resetSB ( sbBody, 375 );                    
                 }, 250 );
                 returnValue = true;
             }
@@ -388,6 +425,93 @@ function updateMainMenu( url, title )
 }
 
 /*
+ * loadMenu ( url, callback )
+ * ----------------------------------------------
+ * Loads url into #pnlMainArea using AJAX. If the url is loaded successfully,
+ * we will call "callback" (usually updateMenu()), passing the url, so that
+ * other parts of the interface can be updated.
+ **************************************************************************/
+
+function loadMenu(url, callback) {
+    var page_request = false;
+    var returnValue = false;
+    
+    var tid = setTimeout( function() { showLoader(); }, 100 );
+    setTimeout ( function() { hideLoader();}, 10000 );    
+    
+    if (window.XMLHttpRequest) // if Mozilla, Safari etc
+    {
+        page_request = new XMLHttpRequest()
+    }
+    else if (window.ActiveXObject)
+    { // if IE
+        try
+            {
+                page_request = new ActiveXObject("Msxml2.XMLHTTP")
+            }
+        catch (e)
+        {
+            try
+                {
+                    page_request = new ActiveXObject("Microsoft.XMLHTTP")
+                }
+            catch (e)
+                {
+                }
+        }
+    }
+    else return false;
+    
+    // set our return value (this will depend on if things work right or not)
+    returnValue = false;
+
+    
+    page_request.onreadystatechange = function()
+    {
+        if (page_request.readyState == 4)
+        {
+        
+            // at this point, we have a page; 200 means success. 
+            if (window.location.href.indexOf("http")==-1 || page_request.status==200) {
+
+                if (tid) clearTimeout(tid);
+                hideLoader();
+        
+                // fill content
+                setTimeout ( function () {
+                    // nuke our scrollbar
+                    destroySB ( sbMenu );
+                    // set the content
+                    document.getElementById('menuMain').innerHTML = page_request.responseText;
+                    // process scripts
+                    processScriptTags('menuMain');
+                                        
+                    resetSB ( sbMenu, 375 );                    
+                }, 250 );
+                returnValue = true;
+            }
+            
+            // if we have a callback, execute it with the url, otherwise return returnValue
+            if (callback)
+            {
+                return callback( url );
+            }
+            else
+            {
+                return returnValue;
+            }
+        }
+        return true;
+    }
+    
+    page_request.open('GET', url, true); //get page asynchronously
+    page_request.send(null);
+    
+    return true;
+}
+
+
+/*
  * setPageTitle ( title )
  * ----------------------
  * Sets the content of #navBodyTitle to the title specified. If no title is passed,
@@ -418,6 +542,7 @@ function setMenuTitle ( title )
 function loaded() {
     //First things first, update our orientation (we can't assume the
     //user is in any particular orientation when loading)
+    
     updateOrientation();
     
     // update certain interface settings
@@ -425,13 +550,25 @@ function loaded() {
     setSiteTitle ( mySiteName );
     setPageTitle ( myStartName );
     
+    // load our menu
+    loadMenu ( './menu.php' );
+    
     // and load our first page
     loadContent ( myStartPage, updateMainMenu);
-    
+     
     // force an update at the end to fix any display kinks.
     $("bodyPanel").style.display="block";
+
+    resetSB ( sbMenu );
+    resetSB ( sbBody );
+
 }
-            
+
+function resetContentScrollBar ()
+{
+    resetSB ( sbBody );
+    return true;
+}
 /*
  * startApp()
  * ----------
@@ -449,3 +586,5 @@ function startApp ()
         updateOrientation();
     };
 }
+
+

@@ -1,7 +1,7 @@
+<div class="content">
 <script type="text/javascript">
     setPageTitle ("Standard Lists");
 </script>
-<div class="content">
     <h1>Standard Lists</h1>
     <p>You can create standard lists using the UL and LI items or any other item as long as the parent is classed "listGroup" and the children items are classed "listItem". H2s that are embedded will
        gain the normal "header" look-and-feel present in iOS.</p>

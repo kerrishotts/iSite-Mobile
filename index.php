@@ -24,6 +24,10 @@
 
         <script type="application/javascript" src="./script/ios.js"></script>
         <script type="application/javascript" src="./script/iscroll-min.js"></script>
+        <script type="application/javascript" src="./script/utility.js"></script>
+        <script type="application/javascript" src="./script/twitterStream.js"></script>
+        <script type="application/javascript" src="./script/gplusStream.js"></script>
+        <script type="application/javascript" src="./script/podcastList.js"></script>
     </head>
     <body class="ipad landscape" id="pnlBody" ontouchmove="BlockMove(event);">
         <div class="panel" id="menuPanel">
@@ -32,17 +36,21 @@
             </div>
             <div class="container" id="pnlMainArea">
                 <div class="content" id="menuMain">
-                    <? include ('./menu.php'); ?>
+                    <!-- replaced at startup -->
+                    Loading ...
                 </div>
             </div>
         </div>
         <div class="panel" id="bodyPanel">
             <div class="navBar" id="navBodyArea">
+                <div id="navTitleArea">
+                <span id="navSiteTitle">Site Title</span><span id="navSiteBullet"> &bull; </span><span id="navBodyTitle">Home</span>
+                </div>
                 <a id="btnBack" href="javascript:loadContent (returnTo.pop(), updateMainMenu, 'slideBack')" class="button back black"><span></span>Back</a>
                 <a id="btnMenu" href="javascript:toggleMenu ()" class="button black">Menu</a>
-                <span id="navSiteTitle">Site Title</span><span id="navSiteBullet"> &bull; </span><span id="navBodyTitle">Home</span>
             </div>
             <div class="container"  id="pnlBodyArea">
+                Loading...
                 <!-- this to be replaced by content at startup -->
             </div>
         </div>
