@@ -1,8 +1,9 @@
-iSite Mobile, version 0.1 alpha
+iSite Mobile, version 0.2 alpha
 ==========================================================
 
     Author: Kerri Shotts (photoKandy Studios LLC)
-    Created: March 2010, Version 0
+    Created: March 2011
+    Updated: January 2012
     License: Creative-Commons SSA+Attribution (commercial use is permitted)
        Note: the demo portions are (C) photoKandy Studios.
 
@@ -14,7 +15,7 @@ functionality, and the look.
 
 Currently the project is attached to the demo pages; but they can be easily replaced
 or used as examples in order to facilitate your own design. Please do not use them
-verbatim in your project as those particular contents are (C) 2011 photoKandy Studios LLC.
+verbatim in your project as those particular contents are (C) 2012 photoKandy Studios LLC.
 
 The actual parts of the framework include the "index.html" page as well as the "ios.js" script
 in the "scripts" directory, and all related "ipad" and "iphone" and "ios" CSS files. The rest
@@ -26,10 +27,6 @@ Documentation
 
 The following documentation is subject to change without notice as the framework is under
 active development.
-
-    Note: Though the framework's demo pages are written using.html, you are not
-          required in any way to use.html; everything can be accomplished via
-          Javascript and HTML.
 
 index.html
 ----------------------------------------------------------
@@ -165,6 +162,9 @@ The following functions are provided:
 
  * *$(id)*: returns a DOM element with named *id*. Note: if you intend on using JQuery, remove
  this function first!
+ * *_resetSB(which)*: Resets the scrollbar specified by *which*. *Which* can be 0 or 1 where 0 is the menu scrollbar and 1 is the body scrollbar.
+ * *resetSB(which)*: Calls *_resetSB* after 125ms via setTimeout.
+ * *destroySB(which)*: Destroys the specified scrollbar.
  * *isIPad()*, *isIPhone()*: returns TRUE if the device is running on the requested device.
  * *isPortrait()*, *isLandscape()*: returns TRUE if the device is in the requested orientation.
  * *BlockMove(event)*: Ensures that no scrolling of the document window will occur. See [this page][1]
@@ -178,7 +178,7 @@ The following functions are provided:
  portrait mode, visible in landscape mode.)
  * *toggleMenu()*: Turns the menu panel on and off. Assumes it is named "menuPanel". In general, this
  is invoked by pressing the "menu" button in portrait mode on an iPad.
- * *showLoader()*, *hideLoader()*: Shows/hides the loading animation.
+ * *showLoader()*, *hideLoader()*: Shows/hides the loading animation. *showLoader* creates a timeout of 10s that calls *hideLoader* in the event nothing ever calls *hideLoader* manually. (For example, an AJAX call times out.)
  * *loadContent(url, callback, animate, backTo)*: loads the content specified by *url* into the
  main content area. When it is complete, *callback* is called in order to do any work (like updating
  selected items). The *animate* and *backTo* functions work together when forming a chain of
@@ -192,14 +192,38 @@ The following functions are provided:
  HREF of each anchor within the menu item group. If *title* is passed, the SPAN named "navBodyTitle"
  will be updated to reflect the title of the page, otherwise it will be obtained from the title
  attribute of the selected menu item.
+ * *loadMenu (url, callback)*: is used to load the menu portion of the page. Typically this is ./menu.html and doesn't change, but it could be changed dynamically.
  * *setPageTitle (title)*: sets the content of SPAN named "navBodyTitle" to *title*. Primarily used
  for pages that are in deep level navigation chains.
+ * *setSiteTitle (title)*: sets the content of SPAN named "navSiteTitle" to *title*. Primarily used only once at App startup.
+ * *setMenuTitle (title)*: sets the content of SPAN named "navMenuTitle" to *title*. Primarily used only once at App startup, *or* if the menu should be changed.
  * *loaded()*: is called when the DOM is ready. It includes the necessary work to start up the
  application.
+ * *resetContentScrollBar()*: is a utility function that does a resetSB(1).
  * *startApp()*: is called intentionally at the end of the index.html page. It adds some event
  listeners to detect DOM readiness and orientation changes.
+ 
+utility.js
+----------------------------------------------------
+Utility functions.
+
+The following functions are useful:
+ * *ago (str)*: is a utility that returns how long ago *str* (which is a date) occurred, in a Twitter-like format. [See this page][4] for more.
+ 
+twitterStream.js
+----------------------------------------------------
+Simple Twitter object that returns up to 200 tweets given a user's ID. Use as seen in /tweets.html.
+
+podcastList.js
+----------------------------------------------------
+Simple Podcast object that parses a podcast feed and generates an iTunes-like list. Use as seen in /podcasts.html. **NOTE**: You must provide your own Google API key.
+
+gplusStream.js
+----------------------------------------------------
+Simple Google+ object that returns posts for a given user. Use as seen in /gplus.html. **NOTE**: You must provide your own Google API key.
 
 
  [1]: http://matt.might.net/articles/how-to-native-iphone-ipad-apps-in-javascript/
  [2]: http://bytes.com/topic/javascript/answers/513633-innerhtml-script-tag
  [3]: http://www.tek-tips.com/viewthread.cfm?qid=1622697&page=13
+ [4]: http://stackoverflow.com/questions/6456856/converting-2011-06-23t1320120000-to-time-ago
