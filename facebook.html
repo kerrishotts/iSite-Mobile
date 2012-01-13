@@ -1,4 +1,4 @@
-<?php
+<.html
     $facebookName = "photoKandy-Studios";
     $facebookUserID = "87979941601";
     $facebookItemCount = 25;
@@ -11,8 +11,8 @@
  <h1>Recent Facebook Posts</h1>
  <p>Here are some of our most recent posts on facebook. If you are on facebook as well, you're welcome to <a href="#">Like Us</a>.</p>
  <div class="listGroup">
-<?php
-    include ('./script/facebook.php');
+<.html
+    include ('./script/facebook.html');
 
     function time_since($original) {
         // array of time period chunks
@@ -66,7 +66,7 @@
      <span class="minor floatRight">(<?= time_since (strtotime( $item["created_time"] ) ) ?> ago)</span>
      <?= $item["description"] ?>
     </a>
-<?php
+<.html
         }
     }
 ?>

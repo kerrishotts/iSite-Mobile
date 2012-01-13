@@ -226,6 +226,7 @@ function toggleMenu()
 function showLoader()
 {
     $("loader").style.display = "block";
+    setTimeout ( function() { hideLoader();}, 10000 );
 }
 
 /*
@@ -550,8 +551,10 @@ function loaded() {
     setSiteTitle ( mySiteName );
     setPageTitle ( myStartName );
     
+    setTimeout ( function () {
+    
     // load our menu
-    loadMenu ( './menu.php' );
+    loadMenu ( './menu.html' );
     
     // and load our first page
     loadContent ( myStartPage, updateMainMenu);
@@ -561,6 +564,8 @@ function loaded() {
 
     resetSB ( sbMenu );
     resetSB ( sbBody );
+    
+    }, 300 );
 
 }
 

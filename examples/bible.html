@@ -1,0 +1,198 @@
+<div class="content white">
+
+    <div id="lstStream">
+        Loading...
+    </div>
+<a href="http://biblia.com/"><img src="http://api.biblia.com/PoweredByBiblia.png" alt="Powered by Biblia" /></a>
+This application uses the <a href="http://biblia.com/">Biblia</a> web services from <a href="http://www.logos.com/">Logos Bible Software</a>.    
+    <br><br><br>
+    <script>
+        setPageTitle ( "Bible Example" );
+//
+// Books of the bible, chapter count, and verse count obtained from http://www.deafmissions.com/tally/bkchptrvrs.html
+//
+var bibleBooks = [ "Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy", "Joshua", "Judges", "Ruth",
+                  "1 Samuel", "2 Samuel", "1 Kings", "2 Kings", "1 Chronicles", "2 Chronicles",
+                  "Ezra", "Nehemia", "Esther", "Job", "Psalms", "Proverbs", "Ecclesiastes",
+                  "Song of Solomon", "Isaiah", "Jeremiah", "Lamentations", "Ezekial", "Daniel",
+                  "Hosea", "Joel", "Amos", "Obadiah", "Jonah", "Micah", "Nahum", "Habakkuk",
+                  "Zephaniah", "Haggai", "Zechariah", "Malachi",
+                  // New Testament
+                  "Matthew", "Mark", "Luke", "John", "Acts", "Romans", "1 Corinthians",
+                  "2 Corinthains", "Galations", "Ephesians", "Philippians", "Colossians",
+                  "1 Thessalonians", "2 Thessalonians", "1 Timothy", "2 Timothy", "Titus",
+                  "Philemon", "Hebrews", "James", "1 Peter", "2 Peter", "1 John", "2 John",
+                  "3 John", "Jude", "Revelation" ];
+
+var bibleBookChapters = [ 50, 40, 27, 36, 34, 24, 21, 4, 31, 24, 22, 25, 29, 36, 10, 13, 10, 42, 150,
+                          31, 12 ,8 ,66 ,52, 5, 48, 12, 14, 3, 9, 1, 4, 7, 3, 3, 3, 2, 14, 4,
+                          // New Testament
+                          28, 16, 24, 21, 28, 16, 16, 13, 6, 6, 4, 4, 5, 3, 6, 4, 3, 1, 13, 5, 5, 3, 5, 1, 1, 1, 22];
+
+
+var passage = "Genesis1";
+var mybiblia;
+
+function populateBibleBooks ()
+{
+    var ihtml = "";
+    for (i=0; i<bibleBooks.length; i++)
+    {
+            item = "<option value='%INDEX%'>%BOOK%</option>";
+            item = item.replace ( "%BOOK%", bibleBooks[i] ) ;
+            item = item.replace ( "%INDEX%", i ) ;
+            
+            ihtml = ihtml + item;
+    }
+        
+    $('lstBibleBooks').innerHTML = ihtml;
+    }
+    
+function populateChapters ( book )
+{
+    var ihtml = "";
+    for (i=0; i<bibleBookChapters[book]; i++)
+    {
+            item = "<option value='%INDEX%'>%NUM%</option>";
+            item = item.replace ( "%INDEX%", i+1 ) ;
+            item = item.replace ( "%NUM%", i+1 ) ;
+            
+            ihtml = ihtml + item;
+    }
+        
+    $('lstBibleBookChapters').innerHTML = ihtml;
+}
+
+function changePassage()
+{
+    var bookName = bibleBooks[$("lstBibleBooks").value].replace(/\s+/g, "");
+    var bookChapter = $("lstBibleBookChapters").value;
+    if (bookName == "")
+    {
+        bookName = "Genesis";
+    }
+    if (bookChapter < 1)
+    {
+        bookChapter = 1;
+    }
+    if (bookChapter > bibleBookChapters[$("lstBibleBooks").value])
+    {
+        bookChapter = bibleBookChapters[$("lstBibleBooks").value];
+    }
+    passage = bookName + bookChapter;
+    loadBible ( $('lstBibles').value, passage );
+}
+
+function bibliaStream ( name, bible, passage, style, container )
+{
+    this.name = name; // we have to know the name in order to construct the callback
+    
+    this.bibliaBible = bible;
+    this.bibliaPassage = passage;
+    this.bibliaStyle = style;
+    this.bibliaContainer = $(container);
+    
+    this.bibliaAPIKEY = "a2bf5258b450317e41f11f5051865e1c";
+    
+    this.bibliaJSONUri = 'http://api.biblia.com/v1/bible/content/' + this.bibliaBible +'.html.json?key='+this.bibliaAPIKEY+'&callback=' + this.name + '.bibliaItem&passage=' + this.bibliaPassage + '&style=' + this.bibliaStyle;
+    
+    this.bibliaItem = function ( o )
+    {
+        this.bibliaContainer.innerHTML = o.text;
+        resetContentScrollBar();
+        hideLoader();
+        return false;
+    }
+    
+    this.loadbiblia = function()
+    {
+        showLoader();
+        var myJSON = document.createElement ("script");
+        myJSON.type = "text/javascript";
+        myJSON.src = this.bibliaJSONUri;
+        $("pnlBodyArea").appendChild (myJSON);
+        return false;
+    }
+    
+}
+
+function bibliaBibles ( name, container )
+{
+    this.name = name; // we have to know the name in order to construct the callback
+    
+    this.bibliaContainer = $(container);
+    
+    this.bibliaAPIKEY = "a2bf5258b450317e41f11f5051865e1c";
+    
+    this.bibliaJSONUri = 'http://api.biblia.com/v1/bible/find.txt/?key='+this.bibliaAPIKEY+'&callback=' + this.name + '.bibliaBible';
+    
+    this.bibliaBible = function ( o )
+    {
+        var ihtml = "";
+        var item = "";
+        for (i=0;i<o.bibles.length;i++)
+        {
+            if (o.bibles[i].copyright=="Public Domain")
+            {
+                item = "<option value='%BIBLE%'>%ABBR%</option>";
+                item = item.replace ( "%TITLE%", o.bibles[i].title ) ;
+                item = item.replace ( "%ABBR%", o.bibles[i].abbreviatedTitle.substr(0,5) ) ;
+                item = item.replace ( "%BIBLE%", o.bibles[i].bible ) ;
+                
+                ihtml = ihtml + item;
+            }
+        }
+        
+        this.bibliaContainer.innerHTML = ihtml;
+        hideLoader();
+        return false;
+    }
+    
+    this.loadbibliaBibles = function()
+    {
+        showLoader();
+        var myJSON = document.createElement ("script");
+        myJSON.type = "text/javascript";
+        myJSON.src = this.bibliaJSONUri;
+        $("pnlBodyArea").appendChild (myJSON);
+        return false;
+    }
+    
+}
+
+        var mybibliaBibles = new bibliaBibles ( 'mybibliaBibles', 'lstBibles' );
+        mybibliaBibles.loadbibliaBibles();
+        
+        populateBibleBooks();
+        populateChapters( 0 );
+
+        
+        function loadBible ( bible, passage )
+        {
+                mybiblia = new bibliaStream ( 'mybiblia', bible,
+                                                    passage, 'fullyFormatted',
+                                                    'lstStream' );
+                mybiblia.loadbiblia();
+        }
+
+
+    loadBible ( 'darby', passage );
+
+    </script>
+
+</div>
+
+  <div class="bottomTabs">
+    <!--<label for="lstBibles">Bible:</label>-->
+    <select id="lstBibles" onchange="loadBible ( $('lstBibles').value, passage );">
+        <option>...</option>
+    </select>
+    <!--<label for="lstBibleBooks">Book:</label>-->
+    <select id="lstBibleBooks" onchange="populateChapters(this.value); changePassage();">
+        <option>...</option>
+    </select>
+    <!--<label for="lstBibleBookChapters">Chapter:</label>-->
+    <select id="lstBibleBookChapters" onchange="changePassage();">
+        <option>...</option>
+    </select>
+  </div>

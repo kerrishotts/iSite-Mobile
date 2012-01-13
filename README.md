@@ -1,9 +1,8 @@
-iSite Mobile, version 0.2 alpha
+iSite Mobile, version 0.1 alpha
 ==========================================================
 
     Author: Kerri Shotts (photoKandy Studios LLC)
-    Created: March 2011, Version 0
-    Updated: January 2012, Version 0.2
+    Created: March 2010, Version 0
     License: Creative-Commons SSA+Attribution (commercial use is permitted)
        Note: the demo portions are (C) photoKandy Studios.
 
@@ -15,7 +14,7 @@ functionality, and the look.
 
 Currently the project is attached to the demo pages; but they can be easily replaced
 or used as examples in order to facilitate your own design. Please do not use them
-verbatim in your project as those particular contents are (C) 2012 photoKandy Studios LLC.
+verbatim in your project as those particular contents are (C) 2011 photoKandy Studios LLC.
 
 The actual parts of the framework include the "index.html" page as well as the "ios.js" script
 in the "scripts" directory, and all related "ipad" and "iphone" and "ios" CSS files. The rest
@@ -27,6 +26,10 @@ Documentation
 
 The following documentation is subject to change without notice as the framework is under
 active development.
+
+    Note: Though the framework's demo pages are written using.html, you are not
+          required in any way to use.html; everything can be accomplished via
+          Javascript and HTML.
 
 index.html
 ----------------------------------------------------------

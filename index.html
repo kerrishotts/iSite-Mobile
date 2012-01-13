@@ -1,4 +1,4 @@
-<html>
+<html manifest="cache.manifest">
     <head>
         <title>
             iSite Mobile Demo
@@ -15,15 +15,11 @@
         <link type="text/css" rel="stylesheet" href="./style/iphone.css">
         <link type="text/css" rel="stylesheet" href="./style/iphone-landscape.css">
         <link type="text/css" rel="stylesheet" href="./style/iphone-portrait.css">
-<?
-    if ($_REQUEST["skin"] == "black")
-    {
-        echo '<link type="text/css" rel="stylesheet" href="./style/glossy-black.css">';
-    }
-?>
+
+        <!--<link type="text/css" rel="stylesheet" href="./style/glossy-black.css">-->
 
         <script type="application/javascript" src="./script/ios.js"></script>
-        <script type="application/javascript" src="./script/iscroll-min.js"></script>
+        <script type="application/javascript" src="./script/iscroll.js"></script>
         <script type="application/javascript" src="./script/utility.js"></script>
         <script type="application/javascript" src="./script/twitterStream.js"></script>
         <script type="application/javascript" src="./script/gplusStream.js"></script>
@@ -37,7 +33,6 @@
             <div class="container" id="pnlMainArea">
                 <div class="content" id="menuMain">
                     <!-- replaced at startup -->
-                    Loading ...
                 </div>
             </div>
         </div>
@@ -50,22 +45,31 @@
                 <a id="btnMenu" href="javascript:toggleMenu ()" class="button black">Menu</a>
             </div>
             <div class="container"  id="pnlBodyArea">
-                Loading...
                 <!-- this to be replaced by content at startup -->
             </div>
         </div>
         <div id="loader">
             <div>
-                Loading...<br>
+                Please Wait...<br>
                 <img src="./images/ajax-loader.gif" alt="Loading"/>
             </div>
         </div>
         <script>
+//
+// check our cache, and if necessary reload the site.
+// from: http://www.html5rocks.com/en/mobile/mobifying.html
+window.applicationCache.addEventListener('updateready', function(e) {
+  if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
+    window.applicationCache.swapCache();
+      console.log ('Cache needs changed, Reloading...');
+      window.location.reload();
+  }
+}, false);
         
             // startup variables
             var mySiteName = "iSite Mobile Demo";
             var myMenuName = "iSite Mobile";
-            var myStartPage = "./home.php";
+            var myStartPage = "./home.html";
             var myStartName = "Home";
         
             startApp( ); // tell our app to start
