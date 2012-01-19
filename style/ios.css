@@ -50,8 +50,8 @@ body
 .navBar #navTitleArea
 {
     position: absolute;
-    left: 240;
-    right: 240;
+    left: 160px;
+    right: 160px;
 }
 
 .bottomTabs

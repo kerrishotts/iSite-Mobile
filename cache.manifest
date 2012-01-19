@@ -1,11 +1,12 @@
 CACHE MANIFEST
-# v189 2012-01-12
+# v2012-01-19.52
 
 NETWORK:
 /
 /examples/
 /script/
 /style/
+/bibles/
 http://api.biblia.com
 http://www.twitter.com
 http://www.facebook.com

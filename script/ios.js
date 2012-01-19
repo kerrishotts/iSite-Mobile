@@ -142,7 +142,8 @@ function isLandscape()
  * --------------------------------------------------------------------------
  * Given the element id, processes any script tags and adds them to the DOM.
  * This is necessary because just loading a page with script tags in it via
- * AJAX will not execute script.
+ * AJAX will not execute script. Altered by pK to support script tags with
+ * src attributes.
  *****************************************************************************/
 function processScriptTags ( id )
 {
@@ -153,7 +154,15 @@ function processScriptTags ( id )
     {
         var newScript = document.createElement('script');
         newScript.type = "text/javascript";
-        newScript.text = d[x].text;
+        newScript.charset = "utf-8";
+        if (d[x].src)
+        {
+            newScript.src = d[x].src;
+        }
+        else
+        {
+            newScript.text = d[x].text;
+        }
         $(id).appendChild (newScript);
     }    
 }

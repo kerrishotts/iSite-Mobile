@@ -1,0 +1,141 @@
+<div class="content white">
+<script type="text/javascript">
+    setPageTitle ("Interlinear");
+    showLoader();
+    //
+    // Books of the bible, chapter count, and verse count obtained from http://www.deafmissions.com/tally/bkchptrvrs.html
+    //
+    var bibleBooks = [ "Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy", "Joshua", "Judges", "Ruth",
+                      "1 Samuel", "2 Samuel", "1 Kings", "2 Kings", "1 Chronicles", "2 Chronicles",
+                      "Ezra", "Nehemia", "Esther", "Job", "Psalms", "Proverbs", "Ecclesiastes",
+                      "Song of Solomon", "Isaiah", "Jeremiah", "Lamentations", "Ezekial", "Daniel",
+                      "Hosea", "Joel", "Amos", "Obadiah", "Jonah", "Micah", "Nahum", "Habakkuk",
+                      "Zephaniah", "Haggai", "Zechariah", "Malachi",
+                      // New Testament
+                      "Matthew", "Mark", "Luke", "John", "Acts", "Romans", "1 Corinthians",
+                      "2 Corinthains", "Galations", "Ephesians", "Philippians", "Colossians",
+                      "1 Thessalonians", "2 Thessalonians", "1 Timothy", "2 Timothy", "Titus",
+                      "Philemon", "Hebrews", "James", "1 Peter", "2 Peter", "1 John", "2 John",
+                      "3 John", "Jude", "Revelation" ];
+    
+    var bibleBookChapters = [ 50, 40, 27, 36, 34, 24, 21, 4, 31, 24, 22, 25, 29, 36, 10, 13, 10, 42, 150,
+                              31, 12 ,8 ,66 ,52, 5, 48, 12, 14, 3, 9, 1, 4, 7, 3, 3, 3, 2, 14, 4,
+                              // New Testament
+                              28, 16, 24, 21, 28, 16, 16, 13, 6, 6, 4, 4, 5, 3, 6, 4, 3, 1, 13, 5, 5, 3, 5, 1, 1, 1, 22];
+
+
+    var passage = "Mat.1";
+
+    function populateBibleBooks ()
+    {
+        var ihtml = "";
+        for (i=39; i<bibleBooks.length; i++)
+        {
+                item = "<option value='%INDEX%'>%BOOK%</option>";
+                item = item.replace ( "%BOOK%", bibleBooks[i] ) ;
+                item = item.replace ( "%INDEX%", i ) ;
+                
+                ihtml = ihtml + item;
+        }
+            
+        $('lstBibleBooks').innerHTML = ihtml;
+        }
+        
+    function populateChapters ( book )
+    {
+        var ihtml = "";
+        for (i=0; i<bibleBookChapters[book]; i++)
+        {
+                item = "<option value='%INDEX%'>%NUM%</option>";
+                item = item.replace ( "%INDEX%", i+1 ) ;
+                item = item.replace ( "%NUM%", i+1 ) ;
+                
+                ihtml = ihtml + item;
+        }
+            
+        $('lstBibleBookChapters').innerHTML = ihtml;
+    }
+    
+    function changePassage()
+    {
+        var bookName = bibleBooks[$("lstBibleBooks").value].replace(/\s+/g, "").substr(0,3);
+        var bookChapter = $("lstBibleBookChapters").value;
+        if (bookName == "")
+        {
+            bookName = "Mat";
+        }
+        if (bookChapter < 1)
+        {
+            bookChapter = 1;
+        }
+        if (bookChapter > bibleBookChapters[$("lstBibleBooks").value])
+        {
+            bookChapter = bibleBookChapters[$("lstBibleBooks").value];
+        }
+        passage = bookName + "." + bookChapter;
+        loadBiblePassage ( passage );
+    }
+
+</script>
+    <div id="lstStream">
+        Loading...
+    </div>
+    
+<script type="text/javascript">
+
+    function loadBiblePassage ( passage )
+    {
+        var ihtml = "<div style='font-size:150%; text-align: center; margin:1em; border-bottom:1px dotted #333333;'>" + bibleBooks[$("lstBibleBooks").value] + ", Chapter " + $("lstBibleBookChapters").value + "</div>";
+        var lhtml = "";
+        var rhtml = "";
+        var nhtml = "";
+        for (i=1;byz[passage+"."+i] || ylt[passage+"."+i];i++)
+        {
+            lhtml = "<div style='float: left; width: 64%'>" + byz[passage+"."+i] + "</div>";
+            rhtml = "<div style='float: right; width: 30%'>" + ylt[passage+"."+i] + "</div>";
+            nhtml = "<div style='font-size:150%; float:left; width:5%; text-align:center'>"+i+"</div>";
+            ihtml = ihtml + "<div style='clear: both'>" + lhtml + nhtml + rhtml + "</div>";
+        }
+        
+        $("lstStream").innerHTML = ihtml;
+        resetContentScrollBar();
+        
+    }
+
+    function biblesLoaded()
+    {
+        if (ylt && byz)
+        {
+            hideLoader();
+            populateBibleBooks();
+            populateChapters( 0 );
+            loadBiblePassage ( passage );
+        }
+    }
+
+    function yltBibleCallback()
+    {
+        biblesLoaded();
+    }
+
+    function byzBibleCallback()
+    {
+        biblesLoaded();
+    }
+</script>
+<script type="text/javascript" charset="utf-8" src="./bibles/ylt.js"></script>
+<script type="text/javascript" charset="utf-8" src="./bibles/byz.js"></script>
+    <div style="clear: both"></div>
+    <br/><br/><br/>Greek text from the Byzantine. English text from Young's Literal Translation.<br/><br/><br/>
+</div>
+
+  <div class="bottomTabs">
+    <!--<label for="lstBibleBooks">Book:</label>-->
+    <select id="lstBibleBooks" onchange="populateChapters(this.value); changePassage();">
+        <option>...</option>
+    </select>
+    <!--<label for="lstBibleBookChapters">Chapter:</label>-->
+    <select id="lstBibleBookChapters" onchange="changePassage();">
+        <option>...</option>
+    </select>
+  </div>

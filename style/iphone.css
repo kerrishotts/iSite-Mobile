@@ -15,11 +15,11 @@
     display: none;
 }
 
-.navBar #navTitleArea
+.iphone .navBar #navTitleArea
 {
     position: absolute;
-    left: 80;
-    right: 80;
+    left: 160px;
+    right: 160px;
 }
 
 .iphone #pnlBodyArea .content
