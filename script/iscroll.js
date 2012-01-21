@@ -75,7 +75,7 @@ var m = Math,
 			useTransition: false,
 			topOffset: 0,
 			checkDOMChanges: false,		// Experimental
-
+            longpresstime: 1000,
 			// Scrollbar
 			hScrollbar: true,
 			vScrollbar: true,
@@ -98,9 +98,19 @@ var m = Math,
 			// Events
 			onRefresh: null,
 			onBeforeScrollStart: function (e) {
-	if (e.target.tagName.toLowerCase() === "select" || e.target.tagName.toLowerCase() === "input" || e.target.tagName.toLowerCase() === "textarea" ){
+    if (e.target.tagName.toLowerCase() === "select" || e.target.tagName.toLowerCase() === "input" || e.target.tagName.toLowerCase() === "textarea" ){
 		return;
 	}
+    // check to see if we're in a white content area (let special things through)
+    var t = e.target;
+    for (t=e.target;t.tagName.toLowerCase()!="body";t=t.parentNode)
+    {
+        if (t.className.toLowerCase().indexOf("white") > -1 &&
+            t.className.toLowerCase().indexOf("content") > -1)
+        {
+            return;
+        }
+    }    
 	e.preventDefault();
 },
 			onScrollStart: null,
@@ -327,6 +337,15 @@ iScroll.prototype = {
 		if (that.options.useTransition || that.options.zoom) that._transitionTime(0);
 
 		that.moved = false;
+        /* this portion from https://github.com/cubiq/iscroll/pull/42/files */
+	if (that.options['longpress']) {
+			that.longpress = setTimeout(
+				that.options['longpress'],
+				that.options['longpresstime'],
+				e);
+		}
+        /* end portion */
+        
 		that.animating = false;
 		that.zoomed = false;
 		that.distX = 0;
@@ -393,6 +412,8 @@ iScroll.prototype = {
 			newY = that.y + deltaY,
 			c1, c2, scale,
 			timestamp = e.timeStamp || Date.now();
+/* this from https://github.com/cubiq/iscroll/pull/42/files */
+that.longpress && clearTimeout(that.longpress);
 
 		if (that.options.onBeforeScrollMove) that.options.onBeforeScrollMove.call(that, e);
 
@@ -466,6 +487,7 @@ iScroll.prototype = {
 	},
 	
 	_end: function (e) {
+
 		if (hasTouch && e.touches.length != 0) return;
 
 		var that = this,
@@ -480,6 +502,9 @@ iScroll.prototype = {
 			newDuration,
 			snap,
 			scale;
+
+/* this from https://github.com/cubiq/iscroll/pull/42/files */
+that.longpress && clearTimeout (that.longpress);
 
 		that._unbind(MOVE_EV);
 		that._unbind(END_EV);
@@ -860,6 +885,8 @@ iScroll.prototype = {
 	 */
 	destroy: function () {
 		var that = this;
+/* this from https://github.com/cubiq/iscroll/pull/42/files */
+that.longpress && clearTimeout (that.longpress);
 
 		that.scroller.style[vendor + 'Transform'] = '';
 
@@ -895,6 +922,8 @@ iScroll.prototype = {
 			els,
 			pos = 0,
 			page = 0;
+/* this from https://github.com/cubiq/iscroll/pull/42/files */
+that.longpress && clearTimeout (that.longpress);
 
 		if (that.scale < that.options.zoomMin) that.scale = that.options.zoomMin;
 		that.wrapperW = that.wrapper.clientWidth || 1;

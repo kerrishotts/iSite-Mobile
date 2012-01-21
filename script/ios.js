@@ -24,6 +24,7 @@ var sbAreas = Array("pnlMainArea","pnlBodyArea");
 
 var returnTo = Array(); // stack for back-button history
 
+var onLongPress = null; // can be used to point to long press handler
 // common functions
 
 /*
@@ -34,6 +35,18 @@ var returnTo = Array(); // stack for back-button history
 function $(id)
 {
     return document.getElementById(id);
+}
+function allClasses(selector)
+{
+    return Array.prototype.slice.call(document.querySelectorAll(selector));
+}
+
+function longpress ( event )
+{
+    if (onLongPress)
+    {
+        onLongPress ( event );
+    }
 }
 
 function _resetSB ( o )
@@ -57,13 +70,15 @@ function _resetSB ( o )
         {
             if (!refreshed)
             {
-                sb[o] = new iScroll ( sbAreas[o] );                
+                if (sbAreas[o]!="pnlBodyArea") { sb[o] = new iScroll ( sbAreas[o] ); } else
+                                               { sb[o] = new iScroll ( sbAreas[o], { longpress: function (e) { longpress(e); } } ); }
             }
         }
     }
     else
     {
-        sb[o] = new iScroll ( sbAreas[o] );
+                if (sbAreas[o]!="pnlBodyArea") { sb[o] = new iScroll ( sbAreas[o] ); } else
+                                               { sb[o] = new iScroll ( sbAreas[o], { longpress: function (e) { longpress(e); } } ); }
     }
 }
 
@@ -133,6 +148,15 @@ function isLandscape()
  *************************************************************************************/
  function BlockMove(event) {
   // Tell Safari not to move the window.
+/*  var t = event.target;
+  for (t=event.target;t.tagName.toLowerCase()!="body";t=t.parentNode)
+  {
+   // alert (t.id);
+    if (t.id == "pnlBodyArea" || t.id == "pnlMainArea" )
+    {
+        return true;
+    }
+  }*/
   event.preventDefault() ;
  }
 
@@ -248,6 +272,23 @@ function hideLoader()
     $("loader").style.display = "none";
 }
 
+function showTabBar()
+{
+    $("tabBar").style.display = "block";
+    $("pnlBodyArea").style.bottom = "43px";
+}
+
+function hideTabBar()
+{
+    $("tabBar").style.display = "none";
+    $("pnlBodyArea").style.bottom = "0px";
+}
+
+function setTabBar ( s )
+{
+    $("tabBar").innerHTML = s;
+}
+
 /*
  * loadContent ( url, callback, animate, backTo )
  * ----------------------------------------------
@@ -326,6 +367,13 @@ function loadContent(url, callback, animate, backTo) {
     {
         $("menuPanel").style.display = "none";
     }
+    
+    hideTabBar();
+    
+    // unset longpress, if set.
+    onLongPress = null;
+
+
     
     page_request.onreadystatechange = function()
     {
@@ -601,4 +649,122 @@ function startApp ()
     };
 }
 
+/*
+ *
+ * processCheckBoxes()
+ * -------------------
+ * this function uses the iOS switches as seen on http://vxjs.org/switch.html and
+ * handles their values and appearance appropriately. It must be called on all
+ * pages that have checkboxes.
+ *********************************************************************************/
+var processCheckBoxes = function() 
+{
+    var checkbox;
+    var objs = allClasses(".switch");
+    var switchControl;
+    
+    for (var i=0; i<objs.length; i++)
+    {
+        switchControl = objs[i];                            //alert (switchControl);
+        checkbox = switchControl.lastElementChild;
+        var lS = checkbox.getAttribute("localStorage");
+        var def= checkbox.getAttribute("default");
+        if (lS)                                             //alert ("Taking stored value.");
+        {
+            if (!localStorage.getItem(lS))
+            {                                                   //alert ("Taking default...");
+                if (def) 
+                {
+                    localStorage.setItem(lS,def);                                   //alert ("Took Default");
+                }
+                else
+                {
+                    localStorage.setItem(lS,"off");                                 //alert ("No default. Set off.");
+                }
+            }
+            if (localStorage.getItem(lS)=="on")  
+            {
+               switchControl.classList.toggle("on");        //alert ("Setting On.");
+               checkbox.checked = !checkbox.checked;
+            }
+        }
+        switchControl.addEventListener("click", function toggleSwitch() 
+        {
+            var checkbox = switchControl.lastElementChild;  //alert (checkbox);
+            switchControl.classList.toggle("on");           //alert (switchControl);
+            checkbox.checked = !checkbox.checked;           //alert (checkbox.checked);
+            if (checkbox.getAttribute("localStorage"))
+            {
+                 localStorage.setItem(checkbox.getAttribute("localStorage"), checkbox.checked ? "on" : "off" );
+            }
+        }, false);
+    }
+};
 
+var processDropDowns = function() 
+{
+    var objs = allClasses(".dropdown");                     //alert (objs);
+    var ddControl;
+    for (var i=0; i<objs.length; i++)
+    {
+        ddControl = objs[i];                                //alert (ddControl);
+        var lS = ddControl.getAttribute("localStorage");    //alert (lS);
+        var def= ddControl.getAttribute("default");         //alert (def);
+        if (lS)
+        {                                                   //alert ("Taking stored value");
+            if (!localStorage.getItem(lS))
+            {
+                localStorage.setItem(lS,def);               //                        alert ("lS = def");
+            }
+
+
+            for (var i=0; i<ddControl.length; i++)
+            {                                               //alert (i);
+                if ( ddControl[i].value == localStorage.getItem(lS) )
+                {                                           //alert (ddControl[i].value);
+                    ddControl.selectedIndex = i;            //alert ("Set index.");
+                }
+            }
+        }
+        ddControl.addEventListener("change", function changeSelection() 
+        {
+            if (ddControl.getAttribute("localStorage"))
+            {   
+                localStorage.setItem(ddControl.getAttribute("localStorage"), ddControl.value );
+            }
+        }, false);
+    }
+};
+
+/**
+ * ScrollFix v0.1
+ * http://www.joelambert.co.uk
+ *
+ * Copyright 2011, Joe Lambert.
+ * Free to use under the MIT license.
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
+var ScrollFix = function(elem) {
+	// Variables to track inputs
+	var startY, startTopScroll;
+
+	elem = elem || document.querySelector(elem);
+
+	// If there is no element, then do nothing	
+	if(!elem)
+		return;
+
+	// Handle the start of interactions
+	elem.addEventListener('touchstart', function(event){
+		startY = event.touches[0].pageY;
+		startTopScroll = elem.scrollTop;
+
+		if(startTopScroll <= 0)
+			elem.scrollTop = 1;
+
+		if(startTopScroll + elem.offsetHeight >= elem.scrollHeight)
+			elem.scrollTop = elem.scrollHeight - elem.offsetHeight - 1;
+	}, false);
+   
+};

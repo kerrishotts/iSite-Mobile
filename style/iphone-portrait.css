@@ -14,3 +14,9 @@ body.portrait.iphone #menuPanel
     display: none;
 }
 
+body.portrait.iphone #tabBar
+{
+    left: 0;
+    right: 0;
+}
+

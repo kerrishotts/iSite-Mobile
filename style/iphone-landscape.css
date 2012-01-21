@@ -13,3 +13,11 @@ body.landscape.iphone #menuPanel
 {
     display: none;
 }
+
+body.landscape.iphone #tabBar
+{
+    left: 0;
+    right: 0;
+}
+
+

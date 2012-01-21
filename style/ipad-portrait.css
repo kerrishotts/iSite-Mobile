@@ -105,3 +105,10 @@ body.portrait.ipad  #btnMenu
 {
     display: block;
 }
+
+body.portrait.ipad #tabBar
+{
+    left: 0;
+    right: 0;
+}
+

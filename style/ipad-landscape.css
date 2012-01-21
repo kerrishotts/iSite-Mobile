@@ -13,3 +13,9 @@ body.landscape.ipad #bodyPanel
     left:321px;
     right: 0;
 }
+
+body.landscape.ipad #tabBar
+{
+    left:321px;
+    right: 0;
+}
